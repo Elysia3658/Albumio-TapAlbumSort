@@ -32,7 +32,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "changli-planet-app"
+rootProject.name = "Albumio"
 include(":app")
 
 
