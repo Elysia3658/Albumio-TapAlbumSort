@@ -13,16 +13,20 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.Settings
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.albumio.databinding.ActivityMainBinding
 import androidx.core.net.toUri
+import com.bumptech.glide.Glide
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val photoView = lazy { binding.photoView }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,15 +51,13 @@ class MainActivity : AppCompatActivity() {
 
         val contentResolver: ContentResolver = this.contentResolver
         val mediaStoreRepository = MediaStoreRepository(this)
-        var  albumFolders :List<String> = mediaStoreRepository.queryAlbumFolders()
+        var  albumImages  = mediaStoreRepository.queryAllImages()
 
-        val adapter = ArrayAdapter(
-            this,
-            R.layout.simple_list_item_1, // 系统提供的单行文本布局
-            albumFolders
-        )
-
-        binding.listView.adapter = adapter
+        if (albumImages.isNotEmpty()) {
+            Glide.with(this)
+                .load(albumImages[0].contentUri)   // 加载第一张
+                .into(photoView.value)
+        }
 
 
     }
