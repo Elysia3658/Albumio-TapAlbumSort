@@ -51,5 +51,8 @@ dependencies {
 
     implementation(libs.chrisbanes.photoview)
     implementation(libs.glide)
-    implementation("androidx.viewpager2:viewpager2:1.1.0")
+    implementation(libs.androidx.viewpager2)
+
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.runtime.ktx)
 }
