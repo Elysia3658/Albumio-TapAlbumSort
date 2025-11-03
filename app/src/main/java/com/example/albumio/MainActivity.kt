@@ -29,6 +29,5 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(binding.fragmentContainerView.id, AlbumFolderFragment())
             .commit()
-
     }
 }

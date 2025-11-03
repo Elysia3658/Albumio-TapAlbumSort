@@ -5,11 +5,13 @@ import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
+import com.example.albumio.logic.data.Album
 
 
 // 定义一个 Repository 类，用于操作 MediaStore 图片数据
 // 通过传入 Context 来获取 ContentResolver
 class MediaStoreRepository(private val context: Context) {
+
 
     // ContentResolver 是 Android 用来访问内容提供者（ContentProvider）的接口
     // MediaStore 就是一个内容提供者，存储了系统的图片、视频、音频等
@@ -33,30 +35,55 @@ class MediaStoreRepository(private val context: Context) {
         val coverUri: Uri? = null   // 相册封面，默认取第一张图片
     )
 
-    fun queryAlbumFolders(): List<String> {
-        val albumList = mutableListOf<String>()
+    fun queryAlbumFolders(): List<Album>{
+        val albumList = mutableListOf<Album>()
 
-        // Projection：只查询相册名
-        val projection = arrayOf(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
+        val projection = arrayOf(
+            MediaStore.Images.Media.BUCKET_ID,
+            MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+            MediaStore.Images.Media._ID
+        )
 
-        // 使用 DISTINCT 去重
+        val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
+
         val cursor = contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             projection,
             null,
             null,
-            "${MediaStore.Images.Media.DATE_ADDED} DESC"
+            sortOrder
         )
 
         cursor?.use { c ->
-            val bucketColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
-            val seen = mutableSetOf<String>() // 用 Set 去重
+            val bucketIdColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_ID)
+            val bucketNameColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
+            val idColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+
+            val albumMap = mutableMapOf<Long, Album>()
+
             while (c.moveToNext()) {
-                val bucketName = c.getString(bucketColumn) ?: "Unknown"
-                if (seen.add(bucketName)) { // 如果是新名字就添加
-                    albumList.add(bucketName)
+                val bucketId = c.getLong(bucketIdColumn)
+                val bucketName = c.getString(bucketNameColumn)
+                val imageId = c.getLong(idColumn)
+
+                val contentUri = ContentUris.withAppendedId(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    imageId
+                )
+
+                val album = albumMap.getOrPut(bucketId) {
+                    Album(
+                        id = bucketId,
+                        name = bucketName,
+                        coverUri = contentUri,
+                        photoCount = 0
+                    )
                 }
+
+                albumMap[bucketId] = album.copy(photoCount = album.photoCount + 1)
             }
+
+            albumList.addAll(albumMap.values)
         }
 
         return albumList
