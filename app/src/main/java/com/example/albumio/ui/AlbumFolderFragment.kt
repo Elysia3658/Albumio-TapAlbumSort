@@ -6,9 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.albumio.databinding.FragmentAlbumFolderBinding
@@ -50,12 +48,9 @@ class AlbumFolderFragment : Fragment() {
     fun streamObservers() {
         // 在 Activity/Fragment 生命周期作用域内开启一个协程
         lifecycleScope.launch {
-            // 收集 Pager 产生的 Flow<PagingData<T>>
-            // collectLatest 表示只处理最新的数据流
-            // 如果在处理上一次分页数据时又来了新的，就会取消旧的，保证只显示最新结果
-            val response = viewModel.a()
-            response.collect { pager ->
-                adapter.submitData(pager}
+            val response = viewModel.pager
+            response.collect { pagingData ->
+                adapter.submitData(pagingData)}
         }
     }
 
