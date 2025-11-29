@@ -52,6 +52,9 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    implementation(libs.codelocator.core)
+    debugImplementation (libs.codelocator.lancet.all)
+
     implementation(libs.chrisbanes.photoview)
     implementation(libs.glide)
     implementation(libs.androidx.viewpager2)

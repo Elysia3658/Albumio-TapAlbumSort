@@ -1,5 +1,6 @@
 package com.example.albumio.ui.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -11,9 +12,31 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.albumio.databinding.ItemAlbumBinding
 import com.example.albumio.logic.data.Album
+import com.example.albumio.ui.SortingActivity
 
 class AlbumPagerAdapter : PagingDataAdapter<Album, AlbumPagerAdapter.AlbumViewHolder>(DIFF) {
-    class AlbumViewHolder(val binding: ItemAlbumBinding) : RecyclerView.ViewHolder(binding.root)
+    class AlbumViewHolder(val binding: ItemAlbumBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(ownAlbum: Album) {
+            Glide.with(binding.ImageViewAlbum.context)
+                .load(ownAlbum.coverUri)
+                .apply(
+                    RequestOptions()
+                        .transform(CenterCrop(), RoundedCorners(30))
+                )
+                .into(binding.ImageViewAlbum)
+            binding.TextViewAlbumName.text = ownAlbum.name
+            binding.TextViewImageNumber.text = ownAlbum.photoCount.toString()
+
+            binding.root.setOnClickListener {
+                val intent = Intent(binding.root.context, SortingActivity::class.java).apply {
+                    putExtra("albumId", ownAlbum.id)
+                    putExtra("albumName", ownAlbum.name)
+                    putExtra("coverUri", ownAlbum.coverUri.toString())
+                }
+                binding.root.context.startActivity(intent)
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
         val binding = ItemAlbumBinding.inflate(
@@ -26,17 +49,7 @@ class AlbumPagerAdapter : PagingDataAdapter<Album, AlbumPagerAdapter.AlbumViewHo
 
     override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
         val ownAlbum = getItem(position)
-        if (ownAlbum != null) {
-            Glide.with(holder.binding.ImageViewAlbum.context)
-                .load(ownAlbum.coverUri)
-                .apply(
-                    RequestOptions()
-                        .transform(CenterCrop(), RoundedCorners(30))
-                )
-                .into(holder.binding.ImageViewAlbum)
-            holder.binding.TextViewAlbumName.text = ownAlbum.name
-            holder.binding.TextViewImageNumber.text = ownAlbum.photoCount.toString()
-        }
+        ownAlbum?.let { holder.bind(it) }
 
     }
 

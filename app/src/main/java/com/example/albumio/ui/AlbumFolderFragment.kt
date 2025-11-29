@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.albumio.databinding.FragmentAlbumFolderBinding
 import com.example.albumio.logic.AlbumFolderViewModel
 import com.example.albumio.ui.adapter.AlbumPagerAdapter
+import com.example.albumio.ui.function.PaddingDecoration
 import kotlinx.coroutines.launch
 
 
@@ -40,6 +41,7 @@ class AlbumFolderFragment : Fragment() {
         recyclerView.adapter = adapter
         val layoutManager = GridLayoutManager(requireContext(), 3)
         recyclerView.layoutManager = layoutManager
+        recyclerView.addItemDecoration(PaddingDecoration(20))
 
         streamObservers()
         bottomObservers()
@@ -55,6 +57,7 @@ class AlbumFolderFragment : Fragment() {
     }
 
     fun bottomObservers() {
+
     }
 
     override fun onDestroyView() {
