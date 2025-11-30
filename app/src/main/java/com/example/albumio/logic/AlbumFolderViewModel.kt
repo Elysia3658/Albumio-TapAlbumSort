@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.example.albumio.myClass.MediaStoreRepository
+import com.example.albumio.logic.model.MediaStoreRepository
 
 class AlbumFolderViewModel(app: Application) : AndroidViewModel(app){
     private val mediaStoreRepository = MediaStoreRepository(app)

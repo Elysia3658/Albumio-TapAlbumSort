@@ -7,6 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.example.albumio.databinding.ActivitySortingBinding
+import com.example.albumio.logic.model.MediaStoreRepository
 
 class SortingActivity : AppCompatActivity() {
 
@@ -33,6 +34,10 @@ class SortingActivity : AppCompatActivity() {
         Glide.with(this)
             .load(coverUri)
             .into(binding.photoView)
+
+        val mediaStoreRepository = MediaStoreRepository(this)
+        val photo = mediaStoreRepository.queryImagesByAlbum(albumId)
+        photo.isEmpty()
 
     }
 }

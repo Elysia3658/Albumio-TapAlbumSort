@@ -1,4 +1,4 @@
-package com.example.albumio.myClass
+package com.example.albumio.logic.model
 
 import android.content.ContentResolver
 import android.content.ContentUris
@@ -6,7 +6,6 @@ import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
 import com.example.albumio.logic.data.Album
-
 
 // 定义一个 Repository 类，用于操作 MediaStore 图片数据
 // 通过传入 Context 来获取 ContentResolver
@@ -28,12 +27,6 @@ class MediaStoreRepository(private val context: Context) {
         val dateAdded: Long         // 图片添加时间（UNIX 时间戳）
     )
 
-    // 数据类：表示相册/文件夹，包含图片列表和封面
-    data class AlbumFolder(
-        val folderName: String,     // 文件夹名称
-        val images: List<ImageItem>,// 文件夹里的图片列表
-        val coverUri: Uri? = null   // 相册封面，默认取第一张图片
-    )
 
     fun queryAlbumFolders(): List<Album>{
         val albumList = mutableListOf<Album>()
@@ -149,23 +142,12 @@ class MediaStoreRepository(private val context: Context) {
         return imageList // 返回查询到的所有图片
     }
 
-    // 按相册文件夹分组的方法
-    fun getImagesGroupedByAlbum(): List<AlbumFolder> {
-        val allImages = queryAllImages()  // 先查询所有图片
-        return allImages.groupBy { it.bucketName }  // 按相册名分组
-            .map { (folderName, images) ->
-                AlbumFolder(
-                    folderName = folderName,        // 文件夹名
-                    images = images,                // 图片列表
-                    coverUri = images.firstOrNull()?.contentUri // 封面取第一张
-                )
-            }
-    }
+
 
     // 条件查询：根据文件夹名称查询
-    fun queryImagesByAlbum(albumName: String): List<ImageItem> {
-        val selection = "${MediaStore.Images.Media.BUCKET_DISPLAY_NAME} = ?" // 查询条件
-        val selectionArgs = arrayOf(albumName)                                // 条件参数
+    fun queryImagesByAlbum(albumId: Long): List<ImageItem> {
+        val selection = "${MediaStore.Images.Media.BUCKET_ID} = ?" // 查询条件
+        val selectionArgs = arrayOf(albumId.toString())                                // 条件参数
 
         return queryImagesWithSelection(selection, selectionArgs)             // 调用通用查询方法
     }
@@ -187,6 +169,7 @@ class MediaStoreRepository(private val context: Context) {
             MediaStore.Images.Media._ID,
             MediaStore.Images.Media.DISPLAY_NAME,
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+            MediaStore.Images.Media.BUCKET_ID,
             MediaStore.Images.Media.RELATIVE_PATH,
             MediaStore.Images.Media.SIZE,
             MediaStore.Images.Media.DATE_ADDED
