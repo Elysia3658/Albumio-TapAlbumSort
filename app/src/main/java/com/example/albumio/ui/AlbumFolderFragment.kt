@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.albumio.databinding.FragmentAlbumFolderBinding
-import com.example.albumio.logic.AlbumFolderViewModel
+import com.example.albumio.logic.viewModel.AlbumFolderViewModel
 import com.example.albumio.ui.adapter.AlbumPagerAdapter
 import com.example.albumio.ui.function.PaddingDecoration
 import kotlinx.coroutines.launch

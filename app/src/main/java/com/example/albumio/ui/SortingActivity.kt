@@ -2,17 +2,22 @@ package com.example.albumio.ui
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.bumptech.glide.Glide
+import androidx.lifecycle.lifecycleScope
 import com.example.albumio.databinding.ActivitySortingBinding
-import com.example.albumio.logic.model.MediaStoreRepository
+import com.example.albumio.logic.viewModel.SortingViewModel
+import com.example.albumio.myClass.PhotoPagerAdapter
+import kotlinx.coroutines.launch
 
 class SortingActivity : AppCompatActivity() {
 
+    private val adapter = PhotoPagerAdapter()
     private lateinit var binding: ActivitySortingBinding
-
+    private val viewPager by lazy { binding.viewPager }
+    private val viewModel: SortingViewModel by viewModels ()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,13 +36,19 @@ class SortingActivity : AppCompatActivity() {
         val albumName = intent.getStringExtra("albumName") ?: "Album"
         val coverUri = intent.getStringExtra("coverUri") ?: ""
 
-        Glide.with(this)
-            .load(coverUri)
-            .into(binding.photoView)
+        streamObservers(albumId)
 
-        val mediaStoreRepository = MediaStoreRepository(this)
-        val photo = mediaStoreRepository.queryImagesByAlbum(albumId)
-        photo.isEmpty()
+        viewPager.adapter = adapter
+    }
 
+    fun streamObservers(albumId : Long) {
+        viewModel.getAlbumPhotos(albumId)
+        // 在 Activity/Fragment 生命周期作用域内开启一个协程
+        lifecycleScope.launch {
+            val response = viewModel.pager
+            response.collect { pagingData ->
+                adapter.submitData(pagingData)
+            }
+        }
     }
 }

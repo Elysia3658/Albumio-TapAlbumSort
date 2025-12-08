@@ -1,4 +1,4 @@
-package com.example.albumio.logic
+package com.example.albumio.logic.viewModel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -7,6 +7,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.example.albumio.logic.model.MediaStoreRepository
+import com.example.albumio.logic.paging.AlbumFolderPagingSource
 
 class AlbumFolderViewModel(app: Application) : AndroidViewModel(app){
     private val mediaStoreRepository = MediaStoreRepository(app)
@@ -21,9 +22,6 @@ class AlbumFolderViewModel(app: Application) : AndroidViewModel(app){
         // 创建PagingSource的工厂函数，这里使用MediaStorePagingSource来处理媒体库数据
     ).flow  // 将Pager转换为Flow，便于在协程中消费，这里是冷流进行发送
         .cachedIn(viewModelScope)  // 在ViewModel作用域内缓存数据，避免配置变更时重新加载(activity内就用lifecycleScope)
-
-
-
 
 
 }

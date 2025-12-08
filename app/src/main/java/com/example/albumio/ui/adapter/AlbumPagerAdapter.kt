@@ -11,7 +11,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.albumio.databinding.ItemAlbumBinding
-import com.example.albumio.logic.data.Album
+import com.example.albumio.logic.data_class.Album
 import com.example.albumio.ui.SortingActivity
 
 class AlbumPagerAdapter : PagingDataAdapter<Album, AlbumPagerAdapter.AlbumViewHolder>(DIFF) {

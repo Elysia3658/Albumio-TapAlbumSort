@@ -1,4 +1,4 @@
-package com.example.albumio.logic.data
+package com.example.albumio.logic.data_class
 
 import android.net.Uri
 

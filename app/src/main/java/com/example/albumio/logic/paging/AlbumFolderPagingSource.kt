@@ -1,8 +1,8 @@
-package com.example.albumio.logic
+package com.example.albumio.logic.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.albumio.logic.data.Album
+import com.example.albumio.logic.data_class.Album
 
 class AlbumFolderPagingSource(
     private val albumList : List<Album>
@@ -45,4 +45,3 @@ class AlbumFolderPagingSource(
         }
     }
 }
-

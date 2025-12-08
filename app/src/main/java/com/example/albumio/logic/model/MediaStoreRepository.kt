@@ -5,7 +5,7 @@ import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
-import com.example.albumio.logic.data.Album
+import com.example.albumio.logic.data_class.Album
 
 // 定义一个 Repository 类，用于操作 MediaStore 图片数据
 // 通过传入 Context 来获取 ContentResolver
