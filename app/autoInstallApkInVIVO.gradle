@@ -1,0 +1,102 @@
+// 自定义的任务
+task tapAfterBuild {
+    doLast {
+        isVivo(new Action<Boolean>() {
+            @Override
+            void execute(Boolean isVivo) {
+                if(isVivo){
+                    //启动一个线程，等待3秒，然后每秒钟点击一次自动安装，最多10次
+                    new Thread(new Runnable() {
+                        @Override
+                        void run() {
+                            Thread.sleep(4000)
+                            for(int i=0;i<10;i++){
+                                println("执行模拟点击 i="+i)
+                                executeCommand("点击继续安装","adb shell input tap 625 2450",null)
+                                Thread.sleep(300)
+                            }
+                        }
+                    }).start()
+                }
+            }
+        })
+    }
+}
+
+
+void  isVivo(Action<Boolean> resultAction){
+    executeCommand("检测是不是vivo手机","adb shell getprop | grep  \"product.manufacturer\"",new Action<String>() {
+        @Override
+        void execute(String s) {
+            if(s!=null&&s.toLowerCase().contains("vivo")){
+                resultAction.execute(true)
+            }else{
+                resultAction.execute(false)
+            }
+        }
+    })
+}
+
+
+
+// 定义一个方法执行命令，并在执行完毕后调用提供的Action<String>回调
+def executeCommand(String opName, String commandLine, Action<String> callback) {
+    println "执行操作:" + opName + ",命令为" + commandLine
+    // 读取输出
+
+    def split = commandLine.split("\\s+")
+    println Arrays.toString(split)
+    // 使用ProcessBuilder执行命令
+    ProcessBuilder processBuilder = new ProcessBuilder(commandLine.split("\\s+")) // 分割命令和参数
+
+    Process process = processBuilder.start()
+
+    def result=  getResult(process.inputStream)
+
+    if (process.exitValue() != 0) {
+        // 如果退出码不为0，则可能包含错误信息
+        result += "\nError: Command exited with error code ${process.exitValue()}"
+    }
+    println "结果为:"+result
+    // 调用回调并传入结果字符串
+    if (callback != null) {
+
+        callback.execute(result)
+    }
+}
+
+String getResult(InputStream inputStream) {
+    BufferedReader bufferedReader = null
+    StringBuffer sb=new StringBuffer()
+    try {
+        bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "gbk"))
+
+        String line = null
+        while ((line = bufferedReader.readLine()) != null) {
+            sb.append(line)
+        }
+    } catch (Exception e) {
+        e.printStackTrace()
+    } finally {
+        if (bufferedReader != null) {
+            try {
+                bufferedReader.close()
+            } catch (IOException e) {
+                e.printStackTrace()
+            }
+        }
+    }
+    return sb.toString()
+};
+
+
+// 配置 afterEvaluate 逻辑
+afterEvaluate {
+    android.applicationVariants.all { variant ->
+        if (variant.buildType.name.equals('debug')) {
+            variant.assemble.finalizedBy(tapAfterBuild)
+        }
+    }
+}
+
+// 可以在这里添加其他相关的任务或配置

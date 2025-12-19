@@ -26,7 +26,7 @@ class SortingViewModel(app: Application) : AndroidViewModel(app) {
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
-                UriListPagingSource(photos)
+                UriListPagingSource(photos)//TODO：这里需要改进为从数据库层面的分页
             }
         ).flow.cachedIn(viewModelScope)
     }

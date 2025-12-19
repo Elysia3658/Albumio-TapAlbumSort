@@ -48,6 +48,8 @@ dependencies {
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.recyclerview)
+    implementation(libs.compose.theme.adapter.core)
+    implementation(libs.compose.theme.adapter)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -58,7 +60,10 @@ dependencies {
     implementation(libs.chrisbanes.photoview)
     implementation(libs.glide)
     implementation(libs.androidx.viewpager2)
+    implementation(libs.google.flexbox)
 
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.runtime.ktx)
 }
+
+apply(from = "autoInstallApkInVIVO.gradle")
