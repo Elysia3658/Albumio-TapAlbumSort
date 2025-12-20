@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_color"
     tools:context=".ui.SortingActivity">
 
 
@@ -12,10 +13,7 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_margin="8dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,10 +29,18 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_height="50dp">
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/Guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="77dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -43,27 +49,89 @@
                 android:id="@+id/deleteButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="15dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/close_24px"
-                app:tint="#D81B60" />
+                app:tint="#FC4C70" />
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_width="26dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="3dp"
                 android:text="删除"
                 android:textAlignment="center"
-                android:textColor="#E53935"
+                android:textColor="@color/operate_word_color"
                 android:textSize="12sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/deleteButton"
                 app:layout_constraintStart_toEndOf="@+id/deleteButton"
-                app:layout_constraintTop_toTopOf="@+id/deleteButton" />
+                app:layout_constraintTop_toTopOf="@+id/deleteButton"
+                app:layout_constraintVertical_bias="0.45" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout3"
+            android:layout_width="91dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/nextButton"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/arrow_right_alt_24px"
+                app:tint="#5EFDD7" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="39dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="3dp"
+                android:text="下一个"
+                android:textAlignment="center"
+                android:textColor="@color/operate_word_color"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/nextButton"
+                app:layout_constraintStart_toEndOf="@+id/nextButton"
+                app:layout_constraintTop_toTopOf="@+id/nextButton"
+                app:layout_constraintVertical_bias="0.45" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/Guideline"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/undo_24px"
+            app:tint="@color/operate_word_color" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/Guideline"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/redo_24px"
+            app:tint="@color/operate_word_color" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -83,15 +151,16 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/card_color">
+            android:backgroundTint="@color/card_color"
+            android:paddingTop="8dp">
 
             <TextView
                 android:id="@+id/sortingTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sorting Options"
-                android:textColor="#000000"
-                android:textSize="18sp"
+                android:text="选择转移.."
+                android:textColor="@color/tint_word_color"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toTopOf="@+id/imageMovesButtons"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -102,6 +171,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/card_color"
+                android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

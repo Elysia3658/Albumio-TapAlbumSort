@@ -83,6 +83,19 @@ class SortingActivity : AppCompatActivity() {
                 coverUri = Uri.parse("content://media/external/images/media/1005"),
                 photoCount = 23
             )
+            ,
+            Album(
+                id = 6L,
+                name = "测试",
+                coverUri = Uri.parse("content://media/external/images/media/1006"),
+                photoCount = 45
+            ),
+            Album(
+                id = 7L,
+                name = "旅行",
+                coverUri = Uri.parse("content://media/external/images/media/1007"),
+                photoCount = 78
+            )
         )
 
 
@@ -91,7 +104,7 @@ class SortingActivity : AppCompatActivity() {
         buttonsRecyclerView.adapter = buttonsAdapter
         val flexboxLayoutManager =FlexboxLayoutManager(this).apply{
             flexDirection = FlexDirection.ROW          // 主轴横向
-            flexWrap = FlexWrap.WRAP                   // 允许换行
+            flexWrap = FlexWrap.WRAP                 // 允许换行
             justifyContent = JustifyContent.SPACE_AROUND // 行内靠左
             alignItems = AlignItems.FLEX_START         // 每行顶部对齐
         }
