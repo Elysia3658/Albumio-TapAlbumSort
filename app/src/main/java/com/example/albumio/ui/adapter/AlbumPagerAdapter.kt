@@ -18,6 +18,7 @@ class AlbumPagerAdapter : PagingDataAdapter<Album, AlbumPagerAdapter.AlbumViewHo
     class AlbumViewHolder(val binding: ItemAlbumBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(ownAlbum: Album) {
             Glide.with(binding.ImageViewAlbum.context)
+                .asBitmap()
                 .load(ownAlbum.coverUri)
                 .apply(
                     RequestOptions()

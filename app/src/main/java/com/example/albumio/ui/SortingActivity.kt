@@ -54,13 +54,13 @@ class SortingActivity : AppCompatActivity() {
         val albumList = listOf(
             Album(
                 id = 1L,
-                name = "旅行",
+                name = "组图表情包",
                 coverUri = "content://media/external/images/media/1001".toUri(),
                 photoCount = 52
             ),
             Album(
                 id = 2L,
-                name = "家庭",
+                name = "情绪表情包",
                 coverUri = Uri.parse("content://media/external/images/media/1002"),
                 photoCount = 34
             ),
@@ -72,18 +72,19 @@ class SortingActivity : AppCompatActivity() {
             ),
             Album(
                 id = 4L,
-                name = "工作",
+                name = "同样超级长的文本大测试看看效果如何",
                 coverUri = Uri.parse("content://media/external/images/media/1004"),
                 photoCount = 10
             )
             ,
             Album(
                 id = 5L,
-                name = "宠物",
+                name = "超级长的文本大测试看看效果如何",
                 coverUri = Uri.parse("content://media/external/images/media/1005"),
                 photoCount = 23
             )
         )
+
 
         buttonsAdapter.submitList(albumList)
 

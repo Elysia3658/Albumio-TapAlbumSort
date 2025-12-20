@@ -26,7 +26,6 @@ class ImageMovesButtonsAdapter : ListAdapter<Album,ImageMovesButtonsAdapter.Butt
         val layoutParams = holder.itemView.layoutParams
         val screenWidth = holder.itemView.resources.displayMetrics.widthPixels - 50  //TODO：这里的50是为了预留间距，其他的适配包有问题的
         layoutParams.width = screenWidth / 5
-        layoutParams.height = screenWidth / 5
         holder.itemView.layoutParams = layoutParams
         // TODO：这里可以进行多设备配置多个
 

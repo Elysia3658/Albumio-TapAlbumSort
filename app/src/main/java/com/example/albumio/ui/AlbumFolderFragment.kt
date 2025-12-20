@@ -1,5 +1,6 @@
 package com.example.albumio.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -36,6 +37,18 @@ class AlbumFolderFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val intent = Intent(requireContext(), SortingActivity::class.java).apply {
+
+            putExtra(
+                "albumId",
+                991102496.toLong()
+            )
+            putExtra("albumName", "QQ")
+            putExtra("coverUri", "content://media/external/images/media/1000231682")
+        } //TODO:暂时使用qq作为启动页，记得改回去
+
+        requireContext().startActivity(intent)
 
         adapter = AlbumPagerAdapter()
         recyclerView.adapter = adapter
