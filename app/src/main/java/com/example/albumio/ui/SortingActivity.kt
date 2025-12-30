@@ -1,15 +1,16 @@
 package com.example.albumio.ui
 
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.widget.ViewPager2
 import com.example.albumio.databinding.ActivitySortingBinding
+import com.example.albumio.logic.commandPattern.PhotosNextCommand
+import com.example.albumio.logic.commandPattern.PhotosPageChangedByUser
 import com.example.albumio.logic.data_class.Album
 import com.example.albumio.logic.viewModel.SortingViewModel
 import com.example.albumio.myClass.PhotoPagerAdapter
@@ -26,7 +27,8 @@ class SortingActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySortingBinding
     private val viewPager by lazy { binding.viewPager }
     private val buttonsRecyclerView by lazy { binding.imageMovesButtons }
-    private val viewModel: SortingViewModel by viewModels ()
+    private val nextButton by lazy { binding.nextPagerButton }
+    private val viewModel: SortingViewModel by viewModels()
     private val photoAdapter = PhotoPagerAdapter()
     private val buttonsAdapter = ImageMovesButtonsAdapter()
 
@@ -47,73 +49,28 @@ class SortingActivity : AppCompatActivity() {
         val albumName = intent.getStringExtra("albumName") ?: "Album"
         val coverUri = intent.getStringExtra("coverUri") ?: ""
 
-        streamObservers(albumId)
 
         viewPager.adapter = photoAdapter
 
-        val albumList = listOf(
-            Album(
-                id = 1L,
-                name = "组图表情包",
-                coverUri = "content://media/external/images/media/1001".toUri(),
-                photoCount = 52
-            ),
-            Album(
-                id = 2L,
-                name = "情绪表情包",
-                coverUri = Uri.parse("content://media/external/images/media/1002"),
-                photoCount = 34
-            ),
-            Album(
-                id = 3L,
-                name = "朋友",
-                coverUri = Uri.parse("content://media/external/images/media/1003"),
-                photoCount = 87
-            ),
-            Album(
-                id = 4L,
-                name = "同样超级长的文本大测试看看效果如何",
-                coverUri = Uri.parse("content://media/external/images/media/1004"),
-                photoCount = 10
-            )
-            ,
-            Album(
-                id = 5L,
-                name = "超级长的文本大测试看看效果如何",
-                coverUri = Uri.parse("content://media/external/images/media/1005"),
-                photoCount = 23
-            )
-            ,
-            Album(
-                id = 6L,
-                name = "测试",
-                coverUri = Uri.parse("content://media/external/images/media/1006"),
-                photoCount = 45
-            ),
-            Album(
-                id = 7L,
-                name = "旅行",
-                coverUri = Uri.parse("content://media/external/images/media/1007"),
-                photoCount = 78
-            )
-        )
-
-
+        val albumList: List<Album> = viewModel.textAlbumList()
         buttonsAdapter.submitList(albumList)
 
         buttonsRecyclerView.adapter = buttonsAdapter
-        val flexboxLayoutManager =FlexboxLayoutManager(this).apply{
+        val flexboxLayoutManager = FlexboxLayoutManager(this).apply {
             flexDirection = FlexDirection.ROW          // 主轴横向
             flexWrap = FlexWrap.WRAP                 // 允许换行
             justifyContent = JustifyContent.SPACE_AROUND // 行内靠左
             alignItems = AlignItems.FLEX_START         // 每行顶部对齐
         }
-
         buttonsRecyclerView.layoutManager = flexboxLayoutManager
+
+        viewPagerOverride()
+        streamObservers(albumId)
+        buttonOnClick()
 
     }
 
-    fun streamObservers(albumId : Long) {
+    fun streamObservers(albumId: Long) {
         viewModel.getAlbumPhotos(albumId)
         // 在 Activity/Fragment 生命周期作用域内开启一个协程
         lifecycleScope.launch {
@@ -122,6 +79,34 @@ class SortingActivity : AppCompatActivity() {
                 photoAdapter.submitData(pagingData)
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.photoState.collect { photoUiState ->
+                if (viewPager.currentItem != photoUiState.currentPage) {
+                    viewPager.currentItem = photoUiState.currentPage
+                }
+            }
+        }
+    }
+
+    fun buttonOnClick() {
+        nextButton.setOnClickListener {
+            viewModel.sendCommand(
+                PhotosNextCommand()
+            )
+        }
+    }
+
+    fun viewPagerOverride() {
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                val currentState = viewModel.photoState.value
+                if (position != currentState.currentPage) {
+                    viewModel.sendCommand(PhotosPageChangedByUser(position))
+                }
+            }
+        })
     }
 
 }
