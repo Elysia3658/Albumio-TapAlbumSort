@@ -113,25 +113,28 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="16dp"
+            android:scaleType="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/Guideline"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/help_24px"
             app:tint="@color/operate_word_color" />
 
+
         <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:id="@+id/undo_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:scaleType="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/Guideline"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/undo_24px"
-            app:tint="@color/operate_word_color" />
+            app:tint="@color/disable_button_color" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

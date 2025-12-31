@@ -10,8 +10,10 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.albumio.logic.commandPattern.Command
+import com.example.albumio.logic.commandPattern.CommandManager
 import com.example.albumio.logic.commandPattern.PhotosNextCommand
 import com.example.albumio.logic.commandPattern.PhotosPageChangedByUser
+import com.example.albumio.logic.data.ButtonUiState
 import com.example.albumio.logic.data.PhotoUiState
 import com.example.albumio.logic.data_class.Album
 import com.example.albumio.logic.model.MediaStoreRepository
@@ -19,14 +21,32 @@ import com.example.albumio.myClass.UriListPagingSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class SortingViewModel(app: Application) : AndroidViewModel(app) {
 
     private val mediaStoreRepository = MediaStoreRepository(app)
+    private val commandManager by lazy { CommandManager() }
     lateinit var pager: Flow<PagingData<Uri>>
     private val _photoState = MutableStateFlow(PhotoUiState())
     val photoState: StateFlow<PhotoUiState> = _photoState
+    private val _buttonsState = MutableStateFlow(ButtonUiState())
+    val buttonsState: StateFlow<ButtonUiState> = _buttonsState
 
+    init {
+        observeOtherState()
+    }
+
+    private fun observeOtherState() {
+        viewModelScope.launch {
+            commandManager.undoAvailable.collect { canUndo ->
+                val newButtonState = _buttonsState.value.copy(
+                    canUndo = canUndo
+                )
+                _buttonsState.value = newButtonState
+            }
+        }
+    }
 
     fun getAlbumPhotos(albumId: Long) {
         val originalPhotos = mediaStoreRepository.queryImagesByAlbum(albumId)
@@ -42,22 +62,26 @@ class SortingViewModel(app: Application) : AndroidViewModel(app) {
         ).flow.cachedIn(viewModelScope)
     }
 
+
     fun sendCommand(command: Command) {
         when (command) {
             is PhotosNextCommand -> {
                 val newPhotosState = command.uiExecute(_photoState.value)
                 _photoState.value = newPhotosState
+                commandManager.addCommand(command)
             }
 
             is PhotosPageChangedByUser -> {
                 val newPhotosState = command.uiRecord(_photoState.value)
                 _photoState.value = newPhotosState
+                commandManager.addCommand(command)
             }
         }
     }
 
 
-    fun undoCommand(command: Command) {
+    fun undoCommand() {
+        val command = commandManager.undoLastCommand()
         when (command) {
             is PhotosNextCommand -> {
                 val newPhotosState = command.uiUndo()

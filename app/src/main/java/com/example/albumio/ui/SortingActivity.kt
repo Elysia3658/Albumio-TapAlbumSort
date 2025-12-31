@@ -4,10 +4,12 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
+import com.example.albumio.R
 import com.example.albumio.databinding.ActivitySortingBinding
 import com.example.albumio.logic.commandPattern.PhotosNextCommand
 import com.example.albumio.logic.commandPattern.PhotosPageChangedByUser
@@ -28,6 +30,7 @@ class SortingActivity : AppCompatActivity() {
     private val viewPager by lazy { binding.viewPager }
     private val buttonsRecyclerView by lazy { binding.imageMovesButtons }
     private val nextButton by lazy { binding.nextPagerButton }
+    private val undoButton by lazy { binding.undoButton }
     private val viewModel: SortingViewModel by viewModels()
     private val photoAdapter = PhotoPagerAdapter()
     private val buttonsAdapter = ImageMovesButtonsAdapter()
@@ -65,12 +68,12 @@ class SortingActivity : AppCompatActivity() {
         buttonsRecyclerView.layoutManager = flexboxLayoutManager
 
         viewPagerOverride()
-        streamObservers(albumId)
+        streamObserversForUi(albumId)
         buttonOnClick()
 
     }
 
-    fun streamObservers(albumId: Long) {
+    fun streamObserversForUi(albumId: Long) {
         viewModel.getAlbumPhotos(albumId)
         // 在 Activity/Fragment 生命周期作用域内开启一个协程
         lifecycleScope.launch {
@@ -87,13 +90,33 @@ class SortingActivity : AppCompatActivity() {
                 }
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.buttonsState.collect { buttonsState ->
+                when(buttonsState.canUndo) {
+                    true -> {
+                        undoButton.isEnabled = true
+                        undoButton.imageTintList = AppCompatResources.getColorStateList(this@SortingActivity, R.color.operate_word_color)
+                    }
+                    false -> {
+                        undoButton.isEnabled = false
+                        undoButton.imageTintList = AppCompatResources.getColorStateList(this@SortingActivity, R.color.disable_button_color)
+                    }
+                }
+            }
+        }
     }
+
 
     fun buttonOnClick() {
         nextButton.setOnClickListener {
             viewModel.sendCommand(
                 PhotosNextCommand()
             )
+        }
+
+        undoButton.setOnClickListener {
+            viewModel.undoCommand()
         }
     }
 

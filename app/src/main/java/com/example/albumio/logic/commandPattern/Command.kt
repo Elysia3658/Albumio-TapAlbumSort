@@ -4,25 +4,10 @@ import com.example.albumio.logic.data.PhotoUiState
 
 sealed interface Command
 
-
-interface UiMutator<T> {
-    fun uiExecute(oldState: T): T
-    fun uiUndo(): T
-}
-
-interface UiRecordByUser<T> {
-    fun uiRecord(oldState: T): T
-    fun uiUndoRecord(): T
-}
-
-interface LogicRunner {
-    fun logicExecute()
-    fun logicUndo()
-}
-
 class PhotosNextCommand() : Command, UiMutator<PhotoUiState> {
     private lateinit var snapshot: PhotoUiState
     override fun uiExecute(oldState: PhotoUiState): PhotoUiState {
+        snapshot = oldState
         val newState = oldState.copy(
             currentPage = oldState.currentPage + 1
         )
@@ -37,7 +22,7 @@ class PhotosNextCommand() : Command, UiMutator<PhotoUiState> {
 class PhotosPageChangedByUser(private val unRecordedCurrentPage: Int) : Command,
     UiRecordByUser<PhotoUiState> {
     private lateinit var snapshot: PhotoUiState
-    override fun uiRecord(oldState: PhotoUiState) : PhotoUiState {
+    override fun uiRecord(oldState: PhotoUiState): PhotoUiState {
         snapshot = oldState
         val currentState = oldState.copy(
             currentPage = unRecordedCurrentPage
