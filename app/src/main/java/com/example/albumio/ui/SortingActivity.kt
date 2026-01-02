@@ -12,8 +12,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.albumio.R
 import com.example.albumio.databinding.ActivitySortingBinding
 import com.example.albumio.logic.commandPattern.PhotosNextCommand
-import com.example.albumio.logic.commandPattern.PhotosPageChangedByUser
-import com.example.albumio.logic.data_class.Album
+import com.example.albumio.logic.commandPattern.PhotosPageChangedByUserCommand
+import com.example.albumio.logic.data.PhotoAlbum
 import com.example.albumio.logic.viewModel.SortingViewModel
 import com.example.albumio.myClass.PhotoPagerAdapter
 import com.example.albumio.ui.adapter.ImageMovesButtonsAdapter
@@ -55,8 +55,8 @@ class SortingActivity : AppCompatActivity() {
 
         viewPager.adapter = photoAdapter
 
-        val albumList: List<Album> = viewModel.textAlbumList()
-        buttonsAdapter.submitList(albumList)
+        val photoAlbumList: List<PhotoAlbum> = viewModel.textAlbumList()
+        buttonsAdapter.submitList(photoAlbumList)
 
         buttonsRecyclerView.adapter = buttonsAdapter
         val flexboxLayoutManager = FlexboxLayoutManager(this).apply {
@@ -126,7 +126,7 @@ class SortingActivity : AppCompatActivity() {
                 super.onPageSelected(position)
                 val currentState = viewModel.photoState.value
                 if (position != currentState.currentPage) {
-                    viewModel.sendCommand(PhotosPageChangedByUser(position))
+                    viewModel.sendCommand(PhotosPageChangedByUserCommand(position))
                 }
             }
         })

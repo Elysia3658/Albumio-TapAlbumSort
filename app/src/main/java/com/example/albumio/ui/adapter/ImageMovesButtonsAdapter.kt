@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.albumio.databinding.ItemImageMovesButtonsBinding
-import com.example.albumio.logic.data_class.Album
+import com.example.albumio.logic.data.PhotoAlbum
 
-class ImageMovesButtonsAdapter : ListAdapter<Album,ImageMovesButtonsAdapter.ButtonsViewHolder>(DIFF) {
+class ImageMovesButtonsAdapter : ListAdapter<PhotoAlbum,ImageMovesButtonsAdapter.ButtonsViewHolder>(DIFF) {
     inner class ButtonsViewHolder(val binding: ItemImageMovesButtonsBinding) : RecyclerView.ViewHolder(binding.root){
         val albumName = binding.nameAlbum
     }
@@ -21,7 +21,7 @@ class ImageMovesButtonsAdapter : ListAdapter<Album,ImageMovesButtonsAdapter.Butt
 
     override fun onBindViewHolder(holder: ButtonsViewHolder, position: Int) {
         val place = getItem(position)
-        holder.albumName.text = place.name
+        holder.albumName.text = place.albumName
 
         val layoutParams = holder.itemView.layoutParams
         val screenWidth = holder.itemView.resources.displayMetrics.widthPixels - 50  //TODO：这里的50是为了预留间距，其他的适配包有问题的
@@ -32,9 +32,9 @@ class ImageMovesButtonsAdapter : ListAdapter<Album,ImageMovesButtonsAdapter.Butt
     }
 
     companion object {
-        private val DIFF = object : DiffUtil.ItemCallback<Album>() {
-            override fun areItemsTheSame(oldItem: Album, newItem: Album) = oldItem.id == newItem.id
-            override fun areContentsTheSame(oldItem: Album, newItem: Album) = oldItem == newItem
+        private val DIFF = object : DiffUtil.ItemCallback<PhotoAlbum>() {
+            override fun areItemsTheSame(oldItem: PhotoAlbum, newItem: PhotoAlbum) = oldItem.albumId == newItem.albumId
+            override fun areContentsTheSame(oldItem: PhotoAlbum, newItem: PhotoAlbum) = oldItem == newItem
         }
     }
 }

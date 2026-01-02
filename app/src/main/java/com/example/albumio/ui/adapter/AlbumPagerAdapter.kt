@@ -11,28 +11,28 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.albumio.databinding.ItemAlbumBinding
-import com.example.albumio.logic.data_class.Album
+import com.example.albumio.logic.data.PhotoAlbum
 import com.example.albumio.ui.SortingActivity
 
-class AlbumPagerAdapter : PagingDataAdapter<Album, AlbumPagerAdapter.AlbumViewHolder>(DIFF) {
+class AlbumPagerAdapter : PagingDataAdapter<PhotoAlbum, AlbumPagerAdapter.AlbumViewHolder>(DIFF) {
     class AlbumViewHolder(val binding: ItemAlbumBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(ownAlbum: Album) {
+        fun bind(ownPhotoAlbum: PhotoAlbum) {
             Glide.with(binding.ImageViewAlbum.context)
                 .asBitmap()
-                .load(ownAlbum.coverUri)
+                .load(ownPhotoAlbum.coverPhotoUri)
                 .apply(
                     RequestOptions()
                         .transform(CenterCrop(), RoundedCorners(30))
                 )
                 .into(binding.ImageViewAlbum)
-            binding.TextViewAlbumName.text = ownAlbum.name
-            binding.TextViewImageNumber.text = ownAlbum.photoCount.toString()
+            binding.TextViewAlbumName.text = ownPhotoAlbum.albumName
+            binding.TextViewImageNumber.text = ownPhotoAlbum.photoCount.toString()
 
             binding.root.setOnClickListener {
                 val intent = Intent(binding.root.context, SortingActivity::class.java).apply {
-                    putExtra("albumId", ownAlbum.id)
-                    putExtra("albumName", ownAlbum.name)
-                    putExtra("coverUri", ownAlbum.coverUri.toString())
+                    putExtra("albumId", ownPhotoAlbum.albumId)
+                    putExtra("albumName", ownPhotoAlbum.albumName)
+                    putExtra("coverUri", ownPhotoAlbum.coverPhotoUri.toString())
                 }
                 binding.root.context.startActivity(intent)
             }
@@ -55,9 +55,9 @@ class AlbumPagerAdapter : PagingDataAdapter<Album, AlbumPagerAdapter.AlbumViewHo
     }
 
     companion object {
-        private val DIFF = object : DiffUtil.ItemCallback<Album>() {
-            override fun areItemsTheSame(oldItem: Album, newItem: Album) = oldItem.id == newItem.id
-            override fun areContentsTheSame(oldItem: Album, newItem: Album) = oldItem == newItem
+        private val DIFF = object : DiffUtil.ItemCallback<PhotoAlbum>() {
+            override fun areItemsTheSame(oldItem: PhotoAlbum, newItem: PhotoAlbum) = oldItem.albumId == newItem.albumId
+            override fun areContentsTheSame(oldItem: PhotoAlbum, newItem: PhotoAlbum) = oldItem == newItem
         }
     }
 }

@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class CommandManager {
-    private val undoStack = ArrayDeque<Command>()
+    private val undoStack = ArrayDeque<Command>()//TODO:限制大小并加入清理机制
     private val _undoAvailable = MutableStateFlow(false)
     val undoAvailable: StateFlow<Boolean> = _undoAvailable.asStateFlow()
 

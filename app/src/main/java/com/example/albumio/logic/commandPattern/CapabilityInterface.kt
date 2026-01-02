@@ -1,5 +1,7 @@
 package com.example.albumio.logic.commandPattern
 
+import android.content.Context
+
 
 interface UiMutator<T> {
     fun uiExecute(oldState: T): T
@@ -12,6 +14,6 @@ interface UiRecordByUser<T> {
 }
 
 interface LogicRunner {
-    fun logicExecute()
+    fun logicExecute(context: Context)
     fun logicUndo()
 }

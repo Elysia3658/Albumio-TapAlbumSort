@@ -11,11 +11,14 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.albumio.logic.commandPattern.Command
 import com.example.albumio.logic.commandPattern.CommandManager
+import com.example.albumio.logic.commandPattern.PhotosCopyCommand
+import com.example.albumio.logic.commandPattern.PhotosDeleteCommand
+import com.example.albumio.logic.commandPattern.PhotosMoveCommand
 import com.example.albumio.logic.commandPattern.PhotosNextCommand
-import com.example.albumio.logic.commandPattern.PhotosPageChangedByUser
+import com.example.albumio.logic.commandPattern.PhotosPageChangedByUserCommand
 import com.example.albumio.logic.data.ButtonUiState
+import com.example.albumio.logic.data.PhotoAlbum
 import com.example.albumio.logic.data.PhotoUiState
-import com.example.albumio.logic.data_class.Album
 import com.example.albumio.logic.model.MediaStoreRepository
 import com.example.albumio.myClass.UriListPagingSource
 import kotlinx.coroutines.flow.Flow
@@ -71,11 +74,15 @@ class SortingViewModel(app: Application) : AndroidViewModel(app) {
                 commandManager.addCommand(command)
             }
 
-            is PhotosPageChangedByUser -> {
+            is PhotosPageChangedByUserCommand -> {
                 val newPhotosState = command.uiRecord(_photoState.value)
                 _photoState.value = newPhotosState
                 commandManager.addCommand(command)
             }
+
+            is PhotosCopyCommand -> TODO()
+            is PhotosDeleteCommand -> TODO()
+            is PhotosMoveCommand -> TODO()
         }
     }
 
@@ -88,61 +95,72 @@ class SortingViewModel(app: Application) : AndroidViewModel(app) {
                 _photoState.value = newPhotosState
             }
 
-            is PhotosPageChangedByUser -> {
+            is PhotosPageChangedByUserCommand -> {
                 val newPhotosState = command.uiUndoRecord()
                 _photoState.value = newPhotosState
             }
+
+            is PhotosCopyCommand -> TODO()
+            is PhotosDeleteCommand -> TODO()
+            is PhotosMoveCommand -> TODO()
         }
     }
 
 
-    fun textAlbumList(): List<Album> {
-        val albumList = listOf(
-            Album(
-                id = 1L,
-                name = "组图表情包",
-                coverUri = "content://media/external/images/media/1001".toUri(),
+    fun textAlbumList(): List<PhotoAlbum> {
+        val photoAlbumLists = listOf(
+            PhotoAlbum(
+                albumId = 1L,
+                albumPath = "path/to/album1",
+                albumName = "组图表情包",
+                coverPhotoUri = "content://media/external/images/media/1001".toUri(),
                 photoCount = 52
             ),
-            Album(
-                id = 2L,
-                name = "情绪表情包",
-                coverUri = Uri.parse("content://media/external/images/media/1002"),
+            PhotoAlbum(
+                albumId = 2L,
+                albumPath = "path/to/album2",
+                albumName = "情绪表情包",
+                coverPhotoUri = Uri.parse("content://media/external/images/media/1002"),
                 photoCount = 34
             ),
-            Album(
-                id = 3L,
-                name = "朋友",
-                coverUri = Uri.parse("content://media/external/images/media/1003"),
+            PhotoAlbum(
+                albumId = 3L,
+                albumPath = "path/to/album3",
+                albumName = "朋友",
+                coverPhotoUri = Uri.parse("content://media/external/images/media/1003"),
                 photoCount = 87
             ),
-            Album(
-                id = 4L,
-                name = "同样超级长的文本大测试看看效果如何",
-                coverUri = Uri.parse("content://media/external/images/media/1004"),
+            PhotoAlbum(
+                albumId = 4L,
+                albumPath = "path/to/album4",
+                albumName = "同样超级长的文本大测试看看效果如何",
+                coverPhotoUri = Uri.parse("content://media/external/images/media/1004"),
                 photoCount = 10
             ),
-            Album(
-                id = 5L,
-                name = "超级长的文本大测试看看效果如何",
-                coverUri = Uri.parse("content://media/external/images/media/1005"),
+            PhotoAlbum(
+                albumId = 5L,
+                albumPath = "path/to/album5",
+                albumName = "超级长的文本大测试看看效果如何",
+                coverPhotoUri = Uri.parse("content://media/external/images/media/1005"),
                 photoCount = 23
             ),
-            Album(
-                id = 6L,
-                name = "测试",
-                coverUri = Uri.parse("content://media/external/images/media/1006"),
+            PhotoAlbum(
+                albumId = 6L,
+                albumPath = "path/to/album6",
+                albumName = "测试",
+                coverPhotoUri = Uri.parse("content://media/external/images/media/1006"),
                 photoCount = 45
             ),
-            Album(
-                id = 7L,
-                name = "旅行",
-                coverUri = Uri.parse("content://media/external/images/media/1007"),
+            PhotoAlbum(
+                albumId = 7L,
+                albumPath = "path/to/album7",
+                albumName = "旅行",
+                coverPhotoUri = Uri.parse("content://media/external/images/media/1007"),
                 photoCount = 78
             )
         )
 
-        return albumList
+        return photoAlbumLists
     }
 
 }

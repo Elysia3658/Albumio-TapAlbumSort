@@ -5,11 +5,11 @@ import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
-import com.example.albumio.logic.data_class.Album
+import com.example.albumio.logic.data.PhotoAlbum
 
 // 定义一个 Repository 类，用于操作 MediaStore 图片数据
 // 通过传入 Context 来获取 ContentResolver
-class MediaStoreRepository(private val context: Context) {
+class MediaStoreRepository(context: Context) {
 
 
     // ContentResolver 是 Android 用来访问内容提供者（ContentProvider）的接口
@@ -28,12 +28,13 @@ class MediaStoreRepository(private val context: Context) {
     )
 
 
-    fun queryAlbumFolders(): List<Album>{
-        val albumList = mutableListOf<Album>()
+    fun queryAlbumFolders(): List<PhotoAlbum>{
+        val photoAlbumList = mutableListOf<PhotoAlbum>()
 
         val projection = arrayOf(
             MediaStore.Images.Media.BUCKET_ID,
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+            MediaStore.Images.Media.RELATIVE_PATH,     // 相对路径
             MediaStore.Images.Media._ID
         )
 
@@ -49,13 +50,15 @@ class MediaStoreRepository(private val context: Context) {
 
         cursor?.use { c ->
             val bucketIdColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_ID)
+            val bucketRelativePathColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media.RELATIVE_PATH)
             val bucketNameColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
             val idColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
 
-            val albumMap = mutableMapOf<Long, Album>()
+            val photoAlbumMap = mutableMapOf<Long, PhotoAlbum>()
 
             while (c.moveToNext()) {
                 val bucketId = c.getLong(bucketIdColumn)
+                val bucketRelativePath = c.getString(bucketRelativePathColumn)
                 val bucketName = c.getString(bucketNameColumn)
                 val imageId = c.getLong(idColumn)
 
@@ -64,22 +67,23 @@ class MediaStoreRepository(private val context: Context) {
                     imageId
                 )
 
-                val album = albumMap.getOrPut(bucketId) {
-                    Album(
-                        id = bucketId,
-                        name = bucketName,
-                        coverUri = contentUri,
+                val photoAlbum = photoAlbumMap.getOrPut(bucketId) {
+                    PhotoAlbum(
+                        albumId = bucketId,
+                        albumPath = bucketRelativePath,
+                        albumName = bucketName,
+                        coverPhotoUri = contentUri,
                         photoCount = 0
                     )
                 }
 
-                albumMap[bucketId] = album.copy(photoCount = album.photoCount + 1)
+                photoAlbumMap[bucketId] = photoAlbum.copy(photoCount = photoAlbum.photoCount + 1)
             }
 
-            albumList.addAll(albumMap.values)
+            photoAlbumList.addAll(photoAlbumMap.values)
         }
 
-        return albumList
+        return photoAlbumList
     }
 
 
