@@ -3,13 +3,19 @@ package com.example.albumio.logic.model
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.Context
-import android.net.Uri
 import android.provider.MediaStore
+import com.example.albumio.logic.data.ImageItem
 import com.example.albumio.logic.data.PhotoAlbum
+import dagger.hilt.android.qualifiers.ApplicationContext
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
 
 // 定义一个 Repository 类，用于操作 MediaStore 图片数据
 // 通过传入 Context 来获取 ContentResolver
-class MediaStoreRepository(context: Context) {
+@Singleton
+class MediaStoreRepository @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
 
 
     // ContentResolver 是 Android 用来访问内容提供者（ContentProvider）的接口
@@ -17,15 +23,7 @@ class MediaStoreRepository(context: Context) {
     private val contentResolver: ContentResolver = context.contentResolver
 
     // 数据类：表示单张图片的信息
-    data class ImageItem(
-        val id: Long,               // MediaStore 中图片的唯一 ID
-        val displayName: String,    // 图片文件名
-        val bucketName: String,     // 图片所在相册/文件夹名
-        val relativePath: String,   // 图片在存储中的相对路径（Android 10+ 的分区存储）
-        val contentUri: Uri,        // 图片的 Content URI，可以用来加载或分享
-        val size: Long,             // 图片大小（字节）
-        val dateAdded: Long         // 图片添加时间（UNIX 时间戳）
-    )
+
 
 
     fun queryAlbumFolders(): List<PhotoAlbum>{
@@ -95,6 +93,7 @@ class MediaStoreRepository(context: Context) {
         val projection = arrayOf(
             MediaStore.Images.Media._ID,               // 图片 ID
             MediaStore.Images.Media.DISPLAY_NAME,      // 图片名称
+            MediaStore.Images.Media.MIME_TYPE,
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME,// 相册名
             MediaStore.Images.Media.RELATIVE_PATH,     // 相对路径
             MediaStore.Images.Media.SIZE,              // 图片大小
@@ -118,6 +117,7 @@ class MediaStoreRepository(context: Context) {
             // 获取每列在 cursor 中的索引
             val idColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
             val nameColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
+            val mimeTypeColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE)
             val bucketColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
             val pathColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media.RELATIVE_PATH)
             val sizeColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)
@@ -127,6 +127,7 @@ class MediaStoreRepository(context: Context) {
             while (c.moveToNext()) {
                 val id = c.getLong(idColumn)             // 获取图片 ID
                 val name = c.getString(nameColumn)       // 获取图片名称
+                val mimeType = c.getString(mimeTypeColumn) ?: "image/jpeg" // 获取 MIME 类型，防空
                 val bucketName = c.getString(bucketColumn) ?: "Unknown" // 获取相册名，防空
                 val relativePath = c.getString(pathColumn) ?: ""        // 获取相对路径
                 val size = c.getLong(sizeColumn)         // 获取图片大小
@@ -139,7 +140,18 @@ class MediaStoreRepository(context: Context) {
                 )
 
                 // 添加到列表
-                imageList.add(ImageItem(id, name, bucketName, relativePath, contentUri, size, dateAdded))
+                imageList.add(
+                    ImageItem(
+                        id,
+                        name,
+                        mimeType,
+                        bucketName,
+                        relativePath,
+                        contentUri,
+                        size,
+                        dateAdded
+                    )
+                )
             }
         }
 
@@ -172,6 +184,7 @@ class MediaStoreRepository(context: Context) {
         val projection = arrayOf(
             MediaStore.Images.Media._ID,
             MediaStore.Images.Media.DISPLAY_NAME,
+            MediaStore.Images.Media.MIME_TYPE,
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
             MediaStore.Images.Media.BUCKET_ID,
             MediaStore.Images.Media.RELATIVE_PATH,
@@ -190,6 +203,7 @@ class MediaStoreRepository(context: Context) {
         cursor?.use { c ->
             val idColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
             val nameColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
+            val mimeTypeColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE)
             val bucketColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
             val pathColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media.RELATIVE_PATH)
             val sizeColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)
@@ -198,6 +212,7 @@ class MediaStoreRepository(context: Context) {
             while (c.moveToNext()) {
                 val id = c.getLong(idColumn)
                 val name = c.getString(nameColumn)
+                val mimeType = c.getString(mimeTypeColumn) ?: "image/jpeg"
                 val bucketName = c.getString(bucketColumn) ?: "Unknown"
                 val relativePath = c.getString(pathColumn) ?: ""
                 val size = c.getLong(sizeColumn)
@@ -208,7 +223,18 @@ class MediaStoreRepository(context: Context) {
                     id
                 )
 
-                imageList.add(ImageItem(id, name, bucketName, relativePath, contentUri, size, dateAdded))
+                imageList.add(
+                    ImageItem(
+                        id,
+                        name,
+                        mimeType,
+                        bucketName,
+                        relativePath,
+                        contentUri,
+                        size,
+                        dateAdded
+                    )
+                )
             }
         }
 

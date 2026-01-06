@@ -15,6 +15,11 @@ pluginManagement {
 //        maven { url = uri("https://jitpack.io") }
         maven(url = "https://jitpack.io") // JitPack
     }
+
+    plugins {
+        id("com.google.devtools.ksp") version "2.0.21-1.0.25"
+        id("com.google.dagger.hilt.android") version "2.57.2"
+    }
 }
 
 dependencyResolutionManagement {

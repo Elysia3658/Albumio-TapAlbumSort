@@ -1,16 +1,19 @@
 package com.example.albumio.logic.viewModel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.example.albumio.logic.model.MediaStoreRepository
 import com.example.albumio.logic.paging.AlbumFolderPagingSource
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 
-class AlbumFolderViewModel(app: Application) : AndroidViewModel(app){
-    private val mediaStoreRepository = MediaStoreRepository(app)
+@HiltViewModel
+class AlbumFolderViewModel @Inject constructor(
+    mediaStoreRepository: MediaStoreRepository
+) : ViewModel() {
 
     val albumFolders = mediaStoreRepository.queryAlbumFolders()
     val pager = Pager(  // 创建Pager实例，用于生成分页数据流

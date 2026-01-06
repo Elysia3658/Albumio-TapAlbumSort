@@ -1,6 +1,7 @@
 package com.example.albumio.logic.commandPattern
 
-import android.content.Context
+import android.content.ContentResolver
+import com.example.albumio.logic.data.ImageItem
 import com.example.albumio.logic.data.PhotoUiState
 
 sealed interface Command
@@ -37,10 +38,10 @@ class PhotosPageChangedByUserCommand(private val unRecordedCurrentPage: Int) : C
 }
 
 class PhotosMoveCommand(
-    private val fromPosition: Int,
-    private val toPosition: Int
+    private val srcPhotoInfo: ImageItem,
+    private val targetAlbumPath: String
 ) : Command, LogicRunner {
-    override fun logicExecute(context: Context) {
+    override fun logicExecute(mediaStoreResolver: ContentResolver) {
         // Logic to move photo from fromPosition to toPosition
     }
 
@@ -52,7 +53,7 @@ class PhotosMoveCommand(
 class PhotosCopyCommand(
     private val position: Int
 ) : Command, LogicRunner {
-    override fun logicExecute(context: Context) {
+    override fun logicExecute(mediaStoreResolver: ContentResolver) {
         // Logic to copy photo at position
     }
 
@@ -62,9 +63,9 @@ class PhotosCopyCommand(
 }
 
 class PhotosDeleteCommand(
-    private val position: Int
+    private val srcPhotoInfo: ImageItem
 ) : Command, LogicRunner {
-    override fun logicExecute(context: Context) {
+    override fun logicExecute(mediaStoreResolver: ContentResolver) {
         // Logic to delete photo at position
     }
 

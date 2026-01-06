@@ -14,9 +14,11 @@ import com.example.albumio.databinding.FragmentAlbumFolderBinding
 import com.example.albumio.logic.viewModel.AlbumFolderViewModel
 import com.example.albumio.ui.adapter.AlbumPagerAdapter
 import com.example.albumio.ui.function.PaddingDecoration
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 
+@AndroidEntryPoint
 class AlbumFolderFragment : Fragment() {
 
     private var _binding : FragmentAlbumFolderBinding? = null

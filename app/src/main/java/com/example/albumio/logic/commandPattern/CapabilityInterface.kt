@@ -1,6 +1,6 @@
 package com.example.albumio.logic.commandPattern
 
-import android.content.Context
+import android.content.ContentResolver
 
 
 interface UiMutator<T> {
@@ -14,6 +14,6 @@ interface UiRecordByUser<T> {
 }
 
 interface LogicRunner {
-    fun logicExecute(context: Context)
+    fun logicExecute(mediaStoreResolver: ContentResolver)
     fun logicUndo()
 }

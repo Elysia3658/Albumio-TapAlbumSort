@@ -1,9 +1,10 @@
 package com.example.albumio.logic.viewModel
 
-import android.app.Application
+import android.content.ContentResolver
+import android.content.Context
 import android.net.Uri
 import androidx.core.net.toUri
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -21,14 +22,22 @@ import com.example.albumio.logic.data.PhotoAlbum
 import com.example.albumio.logic.data.PhotoUiState
 import com.example.albumio.logic.model.MediaStoreRepository
 import com.example.albumio.myClass.UriListPagingSource
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class SortingViewModel(app: Application) : AndroidViewModel(app) {
+@HiltViewModel
+class SortingViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val mediaStoreRepository: MediaStoreRepository
+) : ViewModel() {
 
-    private val mediaStoreRepository = MediaStoreRepository(app)
+
+    private val mediaStoreResolver: ContentResolver by lazy { context.contentResolver }
     private val commandManager by lazy { CommandManager() }
     lateinit var pager: Flow<PagingData<Uri>>
     private val _photoState = MutableStateFlow(PhotoUiState())
@@ -82,7 +91,10 @@ class SortingViewModel(app: Application) : AndroidViewModel(app) {
 
             is PhotosCopyCommand -> TODO()
             is PhotosDeleteCommand -> TODO()
-            is PhotosMoveCommand -> TODO()
+            is PhotosMoveCommand -> {
+                // First, execute logic
+            }
+
         }
     }
 
@@ -100,9 +112,17 @@ class SortingViewModel(app: Application) : AndroidViewModel(app) {
                 _photoState.value = newPhotosState
             }
 
-            is PhotosCopyCommand -> TODO()
-            is PhotosDeleteCommand -> TODO()
-            is PhotosMoveCommand -> TODO()
+            is PhotosCopyCommand -> {
+                TODO()
+            }
+
+            is PhotosDeleteCommand -> {
+                TODO()
+            }
+
+            is PhotosMoveCommand -> {
+                TODO()
+            }
         }
     }
 
