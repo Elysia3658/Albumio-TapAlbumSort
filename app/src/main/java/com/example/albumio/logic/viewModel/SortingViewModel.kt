@@ -21,14 +21,16 @@ import com.example.albumio.logic.data.ButtonUiState
 import com.example.albumio.logic.data.PhotoAlbum
 import com.example.albumio.logic.data.PhotoUiState
 import com.example.albumio.logic.model.MediaStoreRepository
-import com.example.albumio.myClass.UriListPagingSource
+import com.example.albumio.logic.paging.UriListPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @HiltViewModel
 class SortingViewModel @Inject constructor(
@@ -89,11 +91,17 @@ class SortingViewModel @Inject constructor(
                 commandManager.addCommand(command)
             }
 
+            is PhotosMoveCommand -> {
+                viewModelScope.launch {
+                    withContext(Dispatchers.IO){
+                        command.logicExecute(mediaStoreResolver)
+                        commandManager.addCommand(command)
+                    }
+                }
+            }
             is PhotosCopyCommand -> TODO()
             is PhotosDeleteCommand -> TODO()
-            is PhotosMoveCommand -> {
-                // First, execute logic
-            }
+
 
         }
     }

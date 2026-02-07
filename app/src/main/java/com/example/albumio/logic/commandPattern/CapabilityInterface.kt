@@ -13,7 +13,10 @@ interface UiRecordByUser<T> {
     fun uiUndoRecord(): T
 }
 
-interface LogicRunner {
-    fun logicExecute(mediaStoreResolver: ContentResolver)
-    fun logicUndo()
+interface BaseLogicRunner {
+    fun logicExecute(resolver: ContentResolver)
+}
+
+interface UndoLogicRunner : BaseLogicRunner {
+    fun logicUndo(resolver: ContentResolver)
 }
