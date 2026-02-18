@@ -22,7 +22,7 @@ fun copyPhotoInMediaStore(
     resolver: ContentResolver,
     srcUri: Uri,
     targetInsertValues: ContentValues
-) :Uri {
+): Uri {
     val targetUri =
         resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, targetInsertValues)
             ?: throw Exception("目标Uri创建失败ERROR")
@@ -55,7 +55,7 @@ fun movePhotoInMediaStore(
     resolver: ContentResolver,
     srcUri: Uri,
     targetInsertValues: ContentValues
-) :Uri {
+): Uri {
     val targetUri = copyPhotoInMediaStore(resolver, srcUri, targetInsertValues)
     resolver.delete(srcUri, null, null)
     return targetUri
