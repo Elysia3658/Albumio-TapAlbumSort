@@ -40,8 +40,9 @@ class PhotosPageChangedByUserCommand(private val unRecordedCurrentPage: Int) : C
 
 class PhotosMoveCommand(
     private val srcPhotoInfo: ImageItem,
-    private val targetAlbumPath: String
-) : Command, UndoLogicRunner {
+    private val targetAlbumPath: String,
+    private val mutator: UiMutator<PhotoUiState>
+) : Command, UndoLogicRunner, UiMutator<PhotoUiState> by mutator {
     private lateinit var uriSnapshot: Uri
     private val previousAlbumPath = srcPhotoInfo.relativePath
     override fun logicExecute(resolver: ContentResolver) {
@@ -52,6 +53,8 @@ class PhotosMoveCommand(
         val targetInsertValues = insertMediaStoreValues(fileName, mimeType, targetAlbumPath)
         uriSnapshot = movePhotoInMediaStore(resolver, srcUri, targetInsertValues)
     }
+    // TODO:这里会直接删除，等排列自动做好后记得改bug
+    // TODO: 对于这里的操作，需要进行同步相册相关,防止移动后还在的情况
 
     override fun logicUndo(resolver: ContentResolver) {
         val newUri = uriSnapshot

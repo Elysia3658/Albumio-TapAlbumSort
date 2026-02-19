@@ -35,7 +35,7 @@ class SortingActivity : AppCompatActivity() {
     private val undoButton by lazy { binding.undoButton }
     private val viewModel: SortingViewModel by viewModels()
     private val photoAdapter = PhotoPagerAdapter()
-    private val buttonsAdapter = ImageMovesButtonsAdapter()
+    private lateinit var buttonsAdapter: ImageMovesButtonsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,8 +51,6 @@ class SortingActivity : AppCompatActivity() {
 
         val intent = intent
         val albumId = intent.getLongExtra("albumId", -1)
-        val albumName = intent.getStringExtra("albumName") ?: "Album"
-        val coverUri = intent.getStringExtra("coverUri") ?: ""
 
 
         viewPager.adapter = photoAdapter

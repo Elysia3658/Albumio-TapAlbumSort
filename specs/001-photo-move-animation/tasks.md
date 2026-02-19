@@ -23,7 +23,7 @@
 
 **Purpose**: Prepare the project structure for the new animation logic.
 
-- [ ] T001 Create new package `app/src/main/java/com/example/albumio/logic/commandPattern/mutator/` for UI mutators.
+- [X] T001 Create new package `app/src/main/java/com/example/albumio/logic/commandPattern/mutator/` for UI mutators.
 
 ---
 
@@ -43,11 +43,11 @@
 
 ### Implementation for User Story 1
 
-- [ ] T002 [US1] Create the `PhotoMoveAnimationMutator.kt` file in `app/src/main/java/com/example/albumio/logic/commandPattern/mutator/`. This class must implement the `UiMutator` interface and contain the core animation logic.
-- [ ] T003 [US1] Modify `ImageMovesButtonsAdapter.kt` in `app/src/main/java/com/example/albumio/ui/adapter/` to set an `onClickListener` on the item view that passes the clicked view back to the `SortingActivity`.
-- [ ] T004 [US1] Modify `SortingActivity.kt` in `app/src/main/java/com/example/albumio/ui/` to handle the click from the adapter, calculate coordinates, and trigger the `PhotosMoveCommand`.
-- [ ] T005 [US1] Modify `SortingViewModel.kt` in `app/src/main/java/com/example/albumio/logic/viewModel/` to integrate the `PhotoMoveAnimationMutator` with the `photosMove` command logic.
-- [ ] T006 [US1] In `SortingActivity.kt`, implement logic to prevent new clicks on the album list while the animation is running (to cover requirement FR-005).
+- [X] T002 [US1] Create the `PhotoMoveAnimationMutator.kt` file in `app/src/main/java/com/example/albumio/logic/commandPattern/mutator/`. This class must implement the `UiMutator` interface and contain the core animation logic.
+- [X] T003 [US1] Modify `ImageMovesButtonsAdapter.kt` in `app/src/main/java/com/example/albumio/ui/adapter/` to set an `onClickListener` on the item view that passes the clicked view back to the `SortingActivity`.
+- [X] T004 [US1] Modify `SortingActivity.kt` in `app/src/main/java/com/example/albumio/ui/` to handle the click from the adapter, calculate coordinates, and trigger the `PhotosMoveCommand`.
+- [X] T005 [US1] Modify `SortingViewModel.kt` in `app/src/main/java/com/example/albumio/logic/viewModel/` to integrate the `PhotoMoveAnimationMutator` with the `photosMove` command logic.
+- [X] T006 [US1] In `SortingActivity.kt`, implement logic to prevent new clicks on the album list while the animation is running (to cover requirement FR-005).
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently.
 
@@ -61,8 +61,8 @@
 
 ### Implementation for User Story 2
 
-- [ ] T007 [P] [US2] Add a "Next Image" button or another suitable UI element to the `res/layout/activity_sorting.xml` layout file.
-- [ ] T008 [US2] In `SortingActivity.kt`, implement a click listener for the new "Next Image" button. This listener must trigger the existing command for viewing the next image, presumably via the `SortingViewModel`.
+- [X] T007 [P] [US2] Add a "Next Image" button or another suitable UI element to the `res/layout/activity_sorting.xml` layout file.
+- [X] T008 [US2] In `SortingActivity.kt`, implement a click listener for the new "Next Image" button. This listener must trigger the existing command for viewing the next image, presumably via the `SortingViewModel`.
 
 **Checkpoint**: At this point, User Stories 1 and 2 should both be functional.
 
@@ -72,8 +72,8 @@
 
 **Purpose**: Final improvements and cleanup for all new functionality.
 
-- [ ] T009 [P] Review and add KDoc comments to all new or modified classes and methods for both User Story 1 and 2.
-- [ ] T010 Code cleanup and refactoring of the new animation and button logic to ensure it is readable and maintainable.
+- [X] T009 [P] Review and add KDoc comments to all new or modified classes and methods for both User Story 1 and 2.
+- [X] T010 Code cleanup and refactoring of the new animation and button logic to ensure it is readable and maintainable.
 
 ---
 

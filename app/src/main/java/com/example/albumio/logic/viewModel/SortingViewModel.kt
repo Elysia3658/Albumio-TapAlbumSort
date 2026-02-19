@@ -18,6 +18,7 @@ import com.example.albumio.logic.commandPattern.PhotosMoveCommand
 import com.example.albumio.logic.commandPattern.PhotosNextCommand
 import com.example.albumio.logic.commandPattern.PhotosPageChangedByUserCommand
 import com.example.albumio.logic.data.ButtonUiState
+import com.example.albumio.logic.data.ImageItem
 import com.example.albumio.logic.data.PhotoAlbum
 import com.example.albumio.logic.data.PhotoUiState
 import com.example.albumio.logic.model.MediaStoreRepository
@@ -42,6 +43,7 @@ class SortingViewModel @Inject constructor(
     private val mediaStoreResolver: ContentResolver by lazy { context.contentResolver }
     private val commandManager by lazy { CommandManager() }
     lateinit var pager: Flow<PagingData<Uri>>
+    private var photoItems: List<ImageItem> = emptyList()
     private val _photoState = MutableStateFlow(PhotoUiState())
     val photoState: StateFlow<PhotoUiState> = _photoState
     private val _buttonsState = MutableStateFlow(ButtonUiState())
@@ -64,6 +66,7 @@ class SortingViewModel @Inject constructor(
 
     fun getAlbumPhotos(albumId: Long) {
         val originalPhotos = mediaStoreRepository.queryImagesByAlbum(albumId)
+        photoItems = originalPhotos
         val photos = originalPhotos.map { it.contentUri }
         pager = Pager(
             config = PagingConfig(
@@ -74,6 +77,11 @@ class SortingViewModel @Inject constructor(
                 UriListPagingSource(photos)//TODO：这里需要改进为从数据库层面的分页
             }
         ).flow.cachedIn(viewModelScope)
+    }
+
+    fun getCurrentImageItem(): ImageItem? {
+        val currentIndex = _photoState.value.currentPage
+        return photoItems.getOrNull(currentIndex)
     }
 
 
@@ -92,6 +100,9 @@ class SortingViewModel @Inject constructor(
             }
 
             is PhotosMoveCommand -> {
+                val newPhotosState = command.uiExecute(_photoState.value)
+                _photoState.value = newPhotosState
+
                 viewModelScope.launch {
                     withContext(Dispatchers.IO){
                         command.logicExecute(mediaStoreResolver)
