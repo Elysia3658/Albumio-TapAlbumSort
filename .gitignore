@@ -23,3 +23,6 @@ out/
 # Editor files
 *.swp
 *.tmp
+/.specify/
+/Albumio/
+/specs/
