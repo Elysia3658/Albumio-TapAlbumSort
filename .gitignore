@@ -26,3 +26,5 @@ out/
 /.specify/
 /Albumio/
 /specs/
+/.qwen/commands/
+/.qwen/

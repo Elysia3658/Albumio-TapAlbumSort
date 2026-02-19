@@ -26,12 +26,10 @@ import com.example.albumio.logic.paging.UriListPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @HiltViewModel
 class SortingViewModel @Inject constructor(
@@ -102,13 +100,8 @@ class SortingViewModel @Inject constructor(
             is PhotosMoveCommand -> {
                 val newPhotosState = command.uiExecute(_photoState.value)
                 _photoState.value = newPhotosState
+                commandManager.addCommand(command)
 
-                viewModelScope.launch {
-                    withContext(Dispatchers.IO){
-                        command.logicExecute(mediaStoreResolver)
-                        commandManager.addCommand(command)
-                    }
-                }
             }
             is PhotosCopyCommand -> TODO()
             is PhotosDeleteCommand -> TODO()
@@ -140,7 +133,8 @@ class SortingViewModel @Inject constructor(
             }
 
             is PhotosMoveCommand -> {
-                TODO()
+                val newPhotosState = command.uiUndo()
+                _photoState.value = newPhotosState
             }
         }
     }

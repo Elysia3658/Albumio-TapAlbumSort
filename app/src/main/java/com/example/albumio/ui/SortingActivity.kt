@@ -11,8 +11,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.example.albumio.R
 import com.example.albumio.databinding.ActivitySortingBinding
+import com.example.albumio.logic.commandPattern.PhotosMoveCommand
 import com.example.albumio.logic.commandPattern.PhotosNextCommand
 import com.example.albumio.logic.commandPattern.PhotosPageChangedByUserCommand
+import com.example.albumio.logic.commandPattern.mutator.PhotoMoveAnimationMutator
 import com.example.albumio.logic.data.PhotoAlbum
 import com.example.albumio.logic.viewModel.SortingViewModel
 import com.example.albumio.ui.adapter.ImageMovesButtonsAdapter
@@ -54,6 +56,25 @@ class SortingActivity : AppCompatActivity() {
 
 
         viewPager.adapter = photoAdapter
+
+        buttonsAdapter = ImageMovesButtonsAdapter { album, targetView ->
+            val imageItem = viewModel.getCurrentImageItem() ?: return@ImageMovesButtonsAdapter
+
+            val mutator = PhotoMoveAnimationMutator(
+                startView = viewPager,
+                endView = targetView,
+                parentView = binding.root,
+                imageUri = imageItem.contentUri
+            )
+
+            val command = PhotosMoveCommand(
+                srcPhotoInfo = imageItem,
+                targetAlbumPath = album.albumPath,
+                mutator = mutator
+            )
+
+            viewModel.sendCommand(command)
+        }
 
         val photoAlbumList: List<PhotoAlbum> = viewModel.textAlbumList()
         buttonsAdapter.submitList(photoAlbumList)
