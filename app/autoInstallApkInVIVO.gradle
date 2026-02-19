@@ -9,13 +9,14 @@ task tapAfterBuild {
                     new Thread(new Runnable() {
                         @Override
                         void run() {
-                            Thread.sleep(4000)
+                            Thread.sleep(5000)
                             executeCommand("点击同意协议一次","adb shell input tap 372 2278",null)
-                            for(int i=0;i<5;i++){
-                                println("执行模拟点击 i="+i)
-                                executeCommand("点击继续安装","adb shell input tap 625 2450",null)
-                                Thread.sleep(300)
-                            }
+                            executeCommand("点击继续安装","adb shell input tap 625 2450",null)
+//                            for(int i=0;i<5;i++){
+//                                println("执行模拟点击 i="+i)
+//                                executeCommand("点击继续安装","adb shell input tap 625 2450",null)
+//                                Thread.sleep(300)
+//                            }
                         }
                     }).start()
                 }

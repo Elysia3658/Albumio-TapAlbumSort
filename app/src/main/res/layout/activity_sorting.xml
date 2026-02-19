@@ -169,16 +169,35 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/confirmButton"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="52dp"
+                android:layout_height="38dp"
+                android:padding="2dp"
+                android:text="应用"
+                android:textColor="@color/enable_button_text_color"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/enable_button_color"
+                app:cornerRadius="10dp"
+                app:layout_constraintBottom_toTopOf="@+id/imageMovesButtons"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/imageMovesButtons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/card_color"
                 android:layout_marginBottom="8dp"
+                android:backgroundTint="@color/card_color"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:layout_height="72dp" />
+
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

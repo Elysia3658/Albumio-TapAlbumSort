@@ -41,7 +41,7 @@ class SortingViewModel @Inject constructor(
     private val mediaStoreResolver: ContentResolver by lazy { context.contentResolver }
     private val commandManager by lazy { CommandManager() }
     lateinit var pager: Flow<PagingData<Uri>>
-    private var photoItems: List<ImageItem> = emptyList()
+    private var photoItems: List<ImageItem> = emptyList()  //TODO：这里之后也需要优化为分页加载的方式，避免一次性加载过多数据导致内存问题
     private val _photoState = MutableStateFlow(PhotoUiState())
     val photoState: StateFlow<PhotoUiState> = _photoState
     private val _buttonsState = MutableStateFlow(ButtonUiState())

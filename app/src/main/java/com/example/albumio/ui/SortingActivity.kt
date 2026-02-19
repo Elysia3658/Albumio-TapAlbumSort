@@ -56,7 +56,6 @@ class SortingActivity : AppCompatActivity() {
 
 
         viewPager.adapter = photoAdapter
-
         buttonsAdapter = ImageMovesButtonsAdapter { album, targetView ->
             val imageItem = viewModel.getCurrentImageItem() ?: return@ImageMovesButtonsAdapter
 
