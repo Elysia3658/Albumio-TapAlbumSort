@@ -1,8 +1,9 @@
-package com.example.albumio.myClass
+package com.example.albumio.logic.paging
 
 import android.net.Uri
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import kotlin.math.min
 
 class UriListPagingSource(
     private val allUris: List<Uri>
@@ -11,7 +12,7 @@ class UriListPagingSource(
         val page = params.key ?: 0
         val pageSize = params.loadSize
         val fromIndex = page * pageSize
-        val toIndex = kotlin.math.min(fromIndex + pageSize, allUris.size)
+        val toIndex = min(fromIndex + pageSize, allUris.size)
 
         return if (fromIndex < allUris.size) {
             val pageData = allUris.subList(fromIndex, toIndex)

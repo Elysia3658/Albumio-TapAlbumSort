@@ -14,3 +14,12 @@
 .externalNativeBuild
 .cxx
 local.properties
+/docs/
+# General
+*.log
+.env*
+out/
+
+# Editor files
+*.swp
+*.tmp

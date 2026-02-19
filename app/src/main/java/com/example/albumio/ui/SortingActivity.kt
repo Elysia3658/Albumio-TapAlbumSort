@@ -15,8 +15,8 @@ import com.example.albumio.logic.commandPattern.PhotosNextCommand
 import com.example.albumio.logic.commandPattern.PhotosPageChangedByUserCommand
 import com.example.albumio.logic.data.PhotoAlbum
 import com.example.albumio.logic.viewModel.SortingViewModel
-import com.example.albumio.myClass.PhotoPagerAdapter
 import com.example.albumio.ui.adapter.ImageMovesButtonsAdapter
+import com.example.albumio.ui.adapter.PhotoPagerAdapter
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
@@ -35,7 +35,7 @@ class SortingActivity : AppCompatActivity() {
     private val undoButton by lazy { binding.undoButton }
     private val viewModel: SortingViewModel by viewModels()
     private val photoAdapter = PhotoPagerAdapter()
-    private val buttonsAdapter = ImageMovesButtonsAdapter()
+    private lateinit var buttonsAdapter: ImageMovesButtonsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,8 +51,6 @@ class SortingActivity : AppCompatActivity() {
 
         val intent = intent
         val albumId = intent.getLongExtra("albumId", -1)
-        val albumName = intent.getStringExtra("albumName") ?: "Album"
-        val coverUri = intent.getStringExtra("coverUri") ?: ""
 
 
         viewPager.adapter = photoAdapter

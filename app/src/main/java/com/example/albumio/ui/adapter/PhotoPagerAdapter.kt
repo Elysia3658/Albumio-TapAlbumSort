@@ -1,4 +1,4 @@
-package com.example.albumio.myClass
+package com.example.albumio.ui.adapter
 
 import android.net.Uri
 import android.view.GestureDetector
@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.albumio.databinding.ItemPhotoBinding
-
 
 class PhotoPagerAdapter
     : PagingDataAdapter<Uri, PhotoPagerAdapter.PhotoViewHolder>(DIFF) {

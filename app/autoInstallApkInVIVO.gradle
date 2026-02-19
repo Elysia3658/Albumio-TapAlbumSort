@@ -10,7 +10,8 @@ task tapAfterBuild {
                         @Override
                         void run() {
                             Thread.sleep(4000)
-                            for(int i=0;i<10;i++){
+                            executeCommand("点击同意协议一次","adb shell input tap 372 2278",null)
+                            for(int i=0;i<5;i++){
                                 println("执行模拟点击 i="+i)
                                 executeCommand("点击继续安装","adb shell input tap 625 2450",null)
                                 Thread.sleep(300)
