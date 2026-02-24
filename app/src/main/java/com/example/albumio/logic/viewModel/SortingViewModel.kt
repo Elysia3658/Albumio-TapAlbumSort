@@ -53,9 +53,18 @@ class SortingViewModel @Inject constructor(
 
     private fun observeOtherState() {
         viewModelScope.launch {
-            commandManager.undoAvailable.collect { canUndo ->
+            commandManager.isUndoAvailable.collect { canUndo ->
                 val newButtonState = _buttonsState.value.copy(
                     canUndo = canUndo
+                )
+                _buttonsState.value = newButtonState
+            }
+        }
+
+        viewModelScope.launch {
+            commandManager.isConfirmAvailable.collect { canConfirm ->
+                val newButtonState = _buttonsState.value.copy(
+                    canApplyChanges = canConfirm
                 )
                 _buttonsState.value = newButtonState
             }

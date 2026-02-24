@@ -1,6 +1,8 @@
 package com.example.albumio.ui
 
 import android.os.Bundle
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -35,6 +37,7 @@ class SortingActivity : AppCompatActivity() {
     private val buttonsRecyclerView by lazy { binding.imageMovesButtons }
     private val nextButton by lazy { binding.nextPagerButton }
     private val undoButton by lazy { binding.undoButton }
+    private val confirmButton by lazy { binding.confirmButton }
     private val viewModel: SortingViewModel by viewModels()
     private val photoAdapter = PhotoPagerAdapter()
     private lateinit var buttonsAdapter: ImageMovesButtonsAdapter
@@ -121,6 +124,16 @@ class SortingActivity : AppCompatActivity() {
                     false -> {
                         undoButton.isEnabled = false
                         undoButton.imageTintList = AppCompatResources.getColorStateList(this@SortingActivity, R.color.disable_button_color)
+                    }
+                }
+
+                when(buttonsState.canApplyChanges) {
+                    true -> {
+                        confirmButton.visibility = VISIBLE
+                    }
+
+                    false -> {
+                        confirmButton.visibility = INVISIBLE
                     }
                 }
             }

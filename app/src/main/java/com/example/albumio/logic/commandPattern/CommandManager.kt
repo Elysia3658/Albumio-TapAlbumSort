@@ -6,29 +6,37 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class CommandManager {
     private val undoStack = ArrayDeque<Command>()//TODO:限制大小并加入清理机制
-    private val _undoAvailable = MutableStateFlow(false)
-    val undoAvailable: StateFlow<Boolean> = _undoAvailable.asStateFlow()
     private val waitingForExecutionQueue = ArrayDeque<BaseLogicRunner>()
 
+    private val _isUndoAvailable = MutableStateFlow(false)
+    val isUndoAvailable: StateFlow<Boolean> = _isUndoAvailable.asStateFlow()
+    private val _isConfirmAvailable = MutableStateFlow(false)
+    val isConfirmAvailable: StateFlow<Boolean> = _isConfirmAvailable.asStateFlow()
 
-    fun isUndoEmpty() {
-        _undoAvailable.value = undoStack.isNotEmpty()
+
+    fun isListEmpty() {
+        _isUndoAvailable.value = undoStack.isNotEmpty()
+        _isConfirmAvailable.value = waitingForExecutionQueue.isNotEmpty()
     }
 
     fun addCommand(command: Command) {
         undoStack.addLast(command)
-        isUndoEmpty()
         if (command is BaseLogicRunner) {
             waitingForExecutionQueue.addLast(command)
+
         }
+
+        isListEmpty()
     }
 
     fun undoLastCommand(): Command {
         val lastCommand = undoStack.removeLast()
-        isUndoEmpty()
         if(lastCommand is BaseLogicRunner) {
             waitingForExecutionQueue.removeLast()
         }
+
+        isListEmpty()
+
         return lastCommand
     }
 

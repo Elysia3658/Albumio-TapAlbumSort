@@ -8,5 +8,6 @@ data class PhotoUiState (
 
 
 data class ButtonUiState(
-    val canUndo: Boolean = false
+    val canUndo: Boolean = false,
+    val canApplyChanges : Boolean = false
 ) : UiState
