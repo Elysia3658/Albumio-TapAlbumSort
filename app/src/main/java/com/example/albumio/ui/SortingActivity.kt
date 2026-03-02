@@ -38,6 +38,7 @@ class SortingActivity : AppCompatActivity() {
     private val nextButton by lazy { binding.nextPagerButton }
     private val undoButton by lazy { binding.undoButton }
     private val confirmButton by lazy { binding.confirmButton }
+    private val tvBadge by lazy { binding.tvBadge }
     private val viewModel: SortingViewModel by viewModels()
     private val photoAdapter = PhotoPagerAdapter()
     private lateinit var buttonsAdapter: ImageMovesButtonsAdapter
@@ -54,10 +55,14 @@ class SortingActivity : AppCompatActivity() {
             insets
         }
 
-        val intent = intent
-        val albumId = intent.getLongExtra("albumId", -1)
 
+        recyclerViewOverride()
+        viewPagerOverride()
+        streamObserversForUi()
+        buttonOnClick()
+    }
 
+    fun recyclerViewOverride() {
         viewPager.adapter = photoAdapter
         buttonsAdapter = ImageMovesButtonsAdapter { album, targetView ->
             val imageItem = viewModel.getCurrentImageItem() ?: return@ImageMovesButtonsAdapter
@@ -89,14 +94,11 @@ class SortingActivity : AppCompatActivity() {
             alignItems = AlignItems.FLEX_START         // 每行顶部对齐
         }
         buttonsRecyclerView.layoutManager = flexboxLayoutManager
-
-        viewPagerOverride()
-        streamObserversForUi(albumId)
-        buttonOnClick()
-
     }
 
-    fun streamObserversForUi(albumId: Long) {
+
+    fun streamObserversForUi() {
+        val albumId = intent.getLongExtra("albumId", -1)
         viewModel.getAlbumPhotos(albumId)
         // 在 Activity/Fragment 生命周期作用域内开启一个协程
         lifecycleScope.launch {
@@ -138,6 +140,18 @@ class SortingActivity : AppCompatActivity() {
                 }
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.countState.collect { countState ->
+                when(countState.waitingCounts) {
+                    0 -> tvBadge.visibility = INVISIBLE
+                    else -> {
+                        tvBadge.visibility = VISIBLE
+                        tvBadge.text = countState.waitingCounts.toString()
+                    }
+                }
+            }
+        }
     }
 
 
@@ -153,6 +167,7 @@ class SortingActivity : AppCompatActivity() {
         }
     }
 
+    
     fun viewPagerOverride() {
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {

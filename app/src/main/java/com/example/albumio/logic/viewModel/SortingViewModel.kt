@@ -1,7 +1,5 @@
 package com.example.albumio.logic.viewModel
 
-import android.content.ContentResolver
-import android.content.Context
 import android.net.Uri
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
@@ -18,34 +16,34 @@ import com.example.albumio.logic.commandPattern.PhotosMoveCommand
 import com.example.albumio.logic.commandPattern.PhotosNextCommand
 import com.example.albumio.logic.commandPattern.PhotosPageChangedByUserCommand
 import com.example.albumio.logic.data.ButtonUiState
+import com.example.albumio.logic.data.CountUiState
 import com.example.albumio.logic.data.ImageItem
 import com.example.albumio.logic.data.PhotoAlbum
 import com.example.albumio.logic.data.PhotoUiState
 import com.example.albumio.logic.model.MediaStoreRepository
 import com.example.albumio.logic.paging.UriListPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 @HiltViewModel
 class SortingViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val mediaStoreRepository: MediaStoreRepository
 ) : ViewModel() {
 
-
-    private val mediaStoreResolver: ContentResolver by lazy { context.contentResolver }
     private val commandManager by lazy { CommandManager() }
     lateinit var pager: Flow<PagingData<Uri>>
     private var photoItems: List<ImageItem> = emptyList()  //TODO：这里之后也需要优化为分页加载的方式，避免一次性加载过多数据导致内存问题
     private val _photoState = MutableStateFlow(PhotoUiState())
-    val photoState: StateFlow<PhotoUiState> = _photoState
+    val photoState: StateFlow<PhotoUiState> = _photoState.asStateFlow()
     private val _buttonsState = MutableStateFlow(ButtonUiState())
-    val buttonsState: StateFlow<ButtonUiState> = _buttonsState
+    val buttonsState: StateFlow<ButtonUiState> = _buttonsState.asStateFlow()
+    private val _countState = MutableStateFlow(CountUiState())
+    val countState: StateFlow<CountUiState> = _countState.asStateFlow()
 
     init {
         observeOtherState()
@@ -67,6 +65,15 @@ class SortingViewModel @Inject constructor(
                     canApplyChanges = canConfirm
                 )
                 _buttonsState.value = newButtonState
+            }
+        }
+
+        viewModelScope.launch {
+            commandManager.waitingForExecutionQueueCounts.collect { counts ->
+                val newCountState = _countState.value.copy(
+                    waitingCounts = counts
+                )
+                _countState.value = newCountState
             }
         }
     }

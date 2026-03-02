@@ -17,6 +17,9 @@ task tapAfterBuild {
 //                                executeCommand("点击继续安装","adb shell input tap 625 2450",null)
 //                                Thread.sleep(300)
 //                            }
+                            Thread.sleep(2000)
+                            executeCommand("点击同意协议一次","adb shell input tap 372 2278",null)
+                            executeCommand("点击继续安装","adb shell input tap 625 2450",null)
                         }
                     }).start()
                 }

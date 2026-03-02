@@ -169,6 +169,25 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                android:id="@+id/tvBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_badge"
+                android:gravity="center"
+                android:minWidth="18dp"
+                android:minHeight="18dp"
+                android:paddingHorizontal="2dp"
+                tools:text="11"
+                android:textColor="@color/bg_badge_color"
+                android:textSize="11sp"
+
+                android:translationX="-6dp"
+                android:translationY="-12dp"
+
+                app:layout_constraintStart_toEndOf="@+id/sortingTextView"
+                app:layout_constraintTop_toTopOf="@+id/sortingTextView" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/confirmButton"
                 style="@style/Widget.MaterialComponents.Button"

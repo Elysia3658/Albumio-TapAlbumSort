@@ -12,11 +12,14 @@ class CommandManager {
     val isUndoAvailable: StateFlow<Boolean> = _isUndoAvailable.asStateFlow()
     private val _isConfirmAvailable = MutableStateFlow(false)
     val isConfirmAvailable: StateFlow<Boolean> = _isConfirmAvailable.asStateFlow()
+    private val _waitingForExecutionQueueCounts = MutableStateFlow(0)
+    val waitingForExecutionQueueCounts: StateFlow<Int> = _waitingForExecutionQueueCounts.asStateFlow()
 
 
     fun isListEmpty() {
         _isUndoAvailable.value = undoStack.isNotEmpty()
         _isConfirmAvailable.value = waitingForExecutionQueue.isNotEmpty()
+        _waitingForExecutionQueueCounts.value = waitingForExecutionQueue.size
     }
 
     fun addCommand(command: Command) {

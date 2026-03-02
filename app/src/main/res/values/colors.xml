@@ -17,4 +17,5 @@
     <color name="disable_button_color">#878787</color>
     <color name="enable_button_color">#BABABA</color>
     <color name="enable_button_text_color">#222222</color>
+    <color name="bg_badge_color">#FFFFFFFF</color>
 </resources>

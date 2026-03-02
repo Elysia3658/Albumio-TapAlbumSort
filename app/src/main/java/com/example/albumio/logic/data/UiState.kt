@@ -11,3 +11,7 @@ data class ButtonUiState(
     val canUndo: Boolean = false,
     val canApplyChanges : Boolean = false
 ) : UiState
+
+data class CountUiState(
+    val waitingCounts: Int = 0
+) : UiState
