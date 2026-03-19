@@ -16,11 +16,11 @@ import com.example.albumio.databinding.ActivitySortingBinding
 import com.example.albumio.logic.commandPattern.PhotosMoveCommand
 import com.example.albumio.logic.commandPattern.PhotosNextCommand
 import com.example.albumio.logic.commandPattern.PhotosPageChangedByUserCommand
-import com.example.albumio.logic.commandPattern.mutator.PhotoMoveAnimationMutator
 import com.example.albumio.logic.data.PhotoAlbum
 import com.example.albumio.logic.viewModel.SortingViewModel
 import com.example.albumio.ui.adapter.ImageMovesButtonsAdapter
 import com.example.albumio.ui.adapter.PhotoPagerAdapter
+import com.example.albumio.ui.mutator.PhotoMoveAnimationMutator
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap

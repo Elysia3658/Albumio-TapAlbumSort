@@ -178,7 +178,7 @@
                 android:minWidth="18dp"
                 android:minHeight="18dp"
                 android:paddingHorizontal="2dp"
-                tools:text="11"
+                tools:text="1"
                 android:textColor="@color/bg_badge_color"
                 android:textSize="11sp"
 

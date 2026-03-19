@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Albumio">
         <activity
+            android:name=".ui.AlbumPickerActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.SortingActivity"
             android:exported="false" />
         <activity

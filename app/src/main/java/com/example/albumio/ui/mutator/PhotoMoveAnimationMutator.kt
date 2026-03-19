@@ -1,4 +1,4 @@
-package com.example.albumio.logic.commandPattern.mutator
+package com.example.albumio.ui.mutator
 
 import android.animation.ValueAnimator
 import android.net.Uri
